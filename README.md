@@ -72,3 +72,52 @@
 ![alt text](assets/콘서트예약_잔액충전_조회.png)
 ### 5. 결제 API
 ![alt text](assets/콘서트예약_결제.png)
+
+
+## ERD
+![alt text](assets/erd.png)
+
+## API 명세
+![alt text](assets/API%20명세.png)
+
+## Mock API
+[Mock API 링크 이동](https://raw.https://github.com/Arcana12/ConcertReservation/MockAPI.html)
+
+## 디렉토리 구조
+```
+concert-reservation/
+├── reservation/                   
+│   ├── application/              
+│   ├── interface/
+│   │   └── controller/   
+│   ├── domain/                    
+│   │   └── service/
+│   └── infrastructure/ 
+│       ├── entity/           
+│       └── ReservationRepositoryImpl
+├── payment/                       
+│   ├── application/               
+│   │   └── payment_usecase
+│   ├── interface/
+│   │   └── controller/   
+│   ├── domain/                    
+│   │   └── service/
+│   └── infrastructure/ 
+│       ├── entity/           
+│       └── PaymentRepositoryImpl
+├── user/                          
+│   ├── application/               
+│   │   └── user_usecase
+│   ├── interface/
+│   │   └── controller/   
+│   ├── domain/                    
+│   │   └── service/
+│   └── infrastructure/ 
+│       ├── entity/           
+│       └── UserRepositoryImpl
+└── common/                        
+    ├── exception/                 
+    ├── middleware/                #인증, 로깅
+    └── utils/                     
+
+```
