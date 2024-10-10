@@ -81,7 +81,7 @@
 ![alt text](assets/API%20명세.png)
 
 ## Mock API
-[Mock API 링크 이동](https://raw.https://github.com/Arcana12/ConcertReservation/MockAPI.html)
+[Mock API 링크 이동](https://arcana12.github.io/ConcertSwagger/)
 
 ## 디렉토리 구조
 ```
