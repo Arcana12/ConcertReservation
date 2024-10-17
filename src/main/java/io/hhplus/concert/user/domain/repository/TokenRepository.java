@@ -19,7 +19,7 @@ public interface TokenRepository {
 
     void deleteToken(Long id);
 
-    Page<Token> findPendingStatusTokens(Pageable pageable);
+    List<Token> findPendingStatusTokens();
 
     Token findByTokenUuid(UUID tokenUuid);
 }

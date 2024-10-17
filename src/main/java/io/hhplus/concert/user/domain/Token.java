@@ -20,6 +20,7 @@ public class Token {
     private Long id;
     private Long userId;
     private UUID uuid;
+    private Long version;
     private TokenStatus tokenStatus;
     private LocalDateTime expiredAt;
     private LocalDateTime createdAt;

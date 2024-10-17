@@ -4,17 +4,18 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     private Long id;
     private UUID uuid;
     private String name;
-    private Long version;
     private Long amount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

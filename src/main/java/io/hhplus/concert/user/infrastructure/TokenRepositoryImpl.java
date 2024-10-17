@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
+@Repository
 @RequiredArgsConstructor
 public class TokenRepositoryImpl implements TokenRepository {
 
@@ -36,10 +38,15 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
-    public Page<Token> findPendingStatusTokens(Pageable pageable) {
-        Page<TokenEntity> pageTokens = tokenJpaRepository.findPendingStatusTokens(pageable);
-        return pageTokens.map(TokenEntity::toDomain);
+    public List<Token> findPendingStatusTokens() {
+        List<TokenEntity> allPendingTokens = tokenJpaRepository.findPendingStatusTokens();
+        return allPendingTokens.stream()
+            .limit(20)
+            .map(TokenEntity::toDomain)
+            .collect(Collectors.toList());
     }
+
+
 
     @Override
     public void deleteToken(Long id) {
@@ -48,6 +55,6 @@ public class TokenRepositoryImpl implements TokenRepository {
 
     @Override
     public Token findByTokenUuid(UUID tokenUuid) {
-        return tokenJpaRepository.findByTokenUuid(tokenUuid).toDomain();
+        return tokenJpaRepository.findByUuid(tokenUuid).toDomain();
     }
 }

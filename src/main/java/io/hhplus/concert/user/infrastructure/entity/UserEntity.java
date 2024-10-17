@@ -30,9 +30,6 @@ public class UserEntity {
     private String name;
     private Long amount;
 
-    @Version
-    private Long version;
-
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate
@@ -40,11 +37,18 @@ public class UserEntity {
 
     public User toDomain() {
         validateId(id);
-        return new User(id, uuid, name, amount, version,createdAt, updatedAt);
+        return new User(id, uuid, name, amount, createdAt, updatedAt);
     }
+
+    public UserEntity(Long id, UUID uuid, String name, Long amount) {
+        this.id = id;
+        this.uuid = uuid;
+        this.name = name;
+        this.amount = amount;
+    }
+
     public static UserEntity fromDomain(User user) {
-        return new UserEntity(user.getId(), user.getUuid(), user.getName(), user.getAmount(),
-            user.getVersion(),user.getCreatedAt(),user.getUpdatedAt());
+        return new UserEntity(user.getId(), user.getUuid(), user.getName(), user.getAmount());
     }
 
     private void validateId(Long id){

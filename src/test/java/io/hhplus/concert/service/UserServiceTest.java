@@ -4,21 +4,27 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.hhplus.concert.user.domain.Token;
 import io.hhplus.concert.user.domain.TokenStatus;
 import io.hhplus.concert.user.domain.User;
-import io.hhplus.concert.user.domain.UserService;
+import io.hhplus.concert.user.application.UserService;
 import io.hhplus.concert.user.domain.repository.TokenRepository;
 import io.hhplus.concert.user.domain.repository.UserRepository;
 import io.hhplus.concert.user.infrastructure.TokenJpaRepository;
 import io.hhplus.concert.user.infrastructure.entity.UserEntity;
+import io.hhplus.concert.user.interfaces.dto.AmountResponse;
 import io.hhplus.concert.user.interfaces.dto.TokenResponse;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +33,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 public class UserServiceTest {
 
@@ -77,7 +85,7 @@ public class UserServiceTest {
         newToken.setTokenStatus(TokenStatus.PENDING);
         newToken.setExpiredAt(LocalDateTime.now().plusMinutes(5));
 
-        userEntity = new UserEntity(1L, UUID.randomUUID(), "Test", 1000L, 1L, null, null);
+        userEntity = new UserEntity(1L, UUID.randomUUID(), "Test", 1000L, null, null);
     }
 
 
@@ -90,7 +98,6 @@ public class UserServiceTest {
             assertEquals(userEntity.getUuid(), user.getUuid());
             assertEquals(userEntity.getName(), user.getName());
             assertEquals(userEntity.getAmount(), user.getAmount());
-            assertEquals(userEntity.getVersion(), user.getVersion());
             assertEquals(userEntity.getCreatedAt(), user.getCreatedAt());
             assertEquals(userEntity.getUpdatedAt(), user.getUpdatedAt());
         });
@@ -131,4 +138,85 @@ public class UserServiceTest {
         assertNotNull(response.tokenUuid());
     }
 
+    @Test
+    @DisplayName("대기열 토큰 만료시킨다")
+    public void whenTokenExpire_thenTokensShouldBeDeleted(){
+        // Given
+        Token unexpiredToken = new Token();
+        unexpiredToken.setExpiredAt(LocalDateTime.now().plusMinutes(15));
+
+        Token expiredToken = new Token();
+        expiredToken.setExpiredAt(LocalDateTime.now().minusMinutes(15));
+
+        List<Token> tokens = Arrays.asList(unexpiredToken, expiredToken);
+
+        doReturn(tokens).when(tokenRepository).findByStateIssued();
+
+        // When
+        userService.tokenExpire();
+
+        // Then
+        verify(tokenRepository).findByStateIssued();
+        verify(tokenRepository).deleteToken(expiredToken.getId());
+    }
+
+    @Test
+    @DisplayName("대기 상태의 토큰을 발행 상태로 변경한다")
+    public void queueToIssuedToken() {
+        // Given
+        Token pendingToken = new Token();
+        pendingToken.setTokenStatus(TokenStatus.PENDING);
+        Page<Token> tokenPage = new PageImpl<>(List.of(pendingToken));
+
+
+        // When
+        userService.queueToIssuedToken();
+
+        // Then
+        verify(tokenRepository).save(pendingToken);
+        assertEquals(TokenStatus.ISSUED, pendingToken.getTokenStatus());
+        assertTrue(pendingToken.getExpiredAt().isAfter(LocalDateTime.now()));
+    }
+
+    @Test
+    @DisplayName("특정 사용자의 잔액을 가져온다")
+    public void getAmount() {
+        // Given
+        UUID uuid = UUID.randomUUID();
+        User mockUser = new User();
+        mockUser.setId(1L);
+        mockUser.setAmount(1000L);
+
+        doReturn(mockUser).when(userRepository).findById(uuid);
+
+        // When
+        AmountResponse response = userService.getAmount(uuid);
+
+        // Then
+        verify(userRepository).findById(uuid);
+        assertEquals(mockUser.getAmount(), response.amount());
+    }
+
+    @Test
+    @DisplayName("특정 사용자의 잔액을 충전한다")
+    public void chargeAmount() {
+        // Given
+        UUID uuid = UUID.randomUUID();
+        Long rechargeAmount = 1000L;
+
+        User user = new User();
+        user.setId(1L);
+        user.setAmount(2000L);  // 초기 잔액
+
+        doReturn(user).when(userRepository).findById(uuid);
+        Long expectedAmount = user.getAmount() + rechargeAmount;
+
+        // When
+        AmountResponse response = userService.chargeAmount(uuid, rechargeAmount);
+
+        // Then
+        verify(userRepository).findById(uuid);
+        assertEquals(expectedAmount, response.amount());
+        verify(userRepository).save(user);
+    }
 }
