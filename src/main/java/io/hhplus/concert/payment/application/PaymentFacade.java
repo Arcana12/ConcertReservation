@@ -1,14 +1,13 @@
 package io.hhplus.concert.payment.application;
 
-import io.hhplus.concert.concert.application.ConcertService;
+import io.hhplus.concert.concert.domain.ConcertService;
 import io.hhplus.concert.payment.domain.Payment;
-import io.hhplus.concert.payment.domain.PaymentHist;
+import io.hhplus.concert.payment.domain.PaymentService;
 import io.hhplus.concert.payment.domain.PaymentStatus;
 import io.hhplus.concert.payment.interfaces.dto.PaymentResponse;
-import io.hhplus.concert.reservation.application.ReservationService;
+import io.hhplus.concert.reservation.domain.ReservationService;
 import io.hhplus.concert.reservation.domain.Reservation;
-import io.hhplus.concert.reservation.domain.ReservationStatus;
-import io.hhplus.concert.user.application.UserService;
+import io.hhplus.concert.user.domain.UserService;
 import io.hhplus.concert.user.domain.User;
 import jakarta.transaction.Transactional;
 import java.util.UUID;
@@ -27,10 +26,7 @@ public class PaymentFacade {
 
     //결제
     @Transactional
-    public PaymentResponse createPayment(Long reservationId, UUID tokenId, UUID userUuid, Long amount)
-        throws Exception {
-
-        userService.checkToken(tokenId);
+    public PaymentResponse createPayment(Long reservationId, UUID tokenId, UUID userUuid, Long amount) {
 
         User user = userService.getUser(userUuid);
 

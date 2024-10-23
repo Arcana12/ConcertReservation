@@ -1,9 +1,10 @@
 package io.hhplus.concert.reservation.application;
 
-import io.hhplus.concert.concert.application.ConcertService;
+import io.hhplus.concert.concert.domain.ConcertService;
 import io.hhplus.concert.reservation.domain.Reservation;
+import io.hhplus.concert.reservation.domain.ReservationService;
 import io.hhplus.concert.reservation.interfaces.dto.ReservationResponse;
-import io.hhplus.concert.user.application.UserService;
+import io.hhplus.concert.user.domain.UserService;
 import jakarta.transaction.Transactional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,8 @@ public class ReservationFacade {
 
     //예약
     @Transactional
-    public ReservationResponse createReservation(UUID tokenUuid, UUID userUuid, Long concertId, Long seatId)
-        throws Exception {
+    public ReservationResponse createReservation(UUID tokenUuid, UUID userUuid, Long concertId, Long seatId) {
 
-        userService.checkToken(tokenUuid);
         //좌석 상태 확인 및 변경
         concertService.checkAndChangeSeatStatus(seatId);
 
