@@ -1,6 +1,7 @@
 package io.hhplus.concert.user.interfaces;
 
 import io.hhplus.concert.user.domain.UserService;
+import io.hhplus.concert.user.interfaces.dto.AmountChargeRequest;
 import io.hhplus.concert.user.interfaces.dto.AmountRequest;
 import io.hhplus.concert.user.interfaces.dto.AmountResponse;
 import io.hhplus.concert.user.interfaces.dto.TokenRequest;
@@ -61,8 +62,7 @@ public class UserController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             )})
     @GetMapping("/token")
-    public ResponseEntity<TokenStatusResponse> getTokenStatus(@RequestBody TokenStatusRequest request)
-        throws Exception {
+    public ResponseEntity<TokenStatusResponse> getTokenStatus(@RequestBody TokenStatusRequest request) {
         return ResponseEntity.ok(userService.getTokenStatus(request.tokenUuid()));
     }
 
@@ -102,7 +102,7 @@ public class UserController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             )})
     @PostMapping("/amount/charge")
-    public ResponseEntity<AmountResponse> charge(@RequestBody AmountRequest request){
+    public ResponseEntity<AmountResponse> charge(@RequestBody AmountChargeRequest request){
         return ResponseEntity.ok(userService.chargeAmount(request.userUuid(), request.amount()));
     }
 }

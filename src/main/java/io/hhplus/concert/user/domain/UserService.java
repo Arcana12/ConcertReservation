@@ -103,7 +103,7 @@ public class UserService {
 
     //잔액 충전
     @Transactional
-    public AmountResponse chargeAmount(UUID uuid,Long amount){
+    public AmountResponse chargeAmount(UUID uuid, Long amount) {
         User user = getUser(uuid);
 
         user.charge(amount);
@@ -112,7 +112,7 @@ public class UserService {
         return new AmountResponse(user.getAmount());
     }
 
-    public void useAmount(User user, Long amount){
+    public void useAmount(User user, Long amount) {
         user.use(amount);
         userRepository.save(user);
     }
@@ -126,12 +126,12 @@ public class UserService {
     }
 
     //사용자 조회
-    public User getUser(UUID uuid){
+    public User getUser(UUID uuid) {
         return userRepository.findById(uuid);
     }
 
     //토큰 만료
-    public void dropToken(Long id){
+    public void dropToken(Long id) {
         tokenJpaRepository.deleteByUserId(id);
     }
 }

@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 import io.hhplus.concert.user.domain.Token;
 import io.hhplus.concert.user.domain.TokenStatus;
 import io.hhplus.concert.user.domain.User;
-import io.hhplus.concert.user.application.UserService;
+import io.hhplus.concert.user.domain.UserService;
 import io.hhplus.concert.user.domain.repository.TokenRepository;
 import io.hhplus.concert.user.domain.repository.UserRepository;
 import io.hhplus.concert.user.infrastructure.TokenJpaRepository;
