@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,7 +25,7 @@ public class PaymentController {
         summary = "결제 api",
         responses = {
             @ApiResponse(responseCode = "200",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenResponse.class))
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaymentResponse.class))
             ),
 
             @ApiResponse(responseCode = "401", description = "유효하지 않은 값입니다.",
@@ -35,10 +36,9 @@ public class PaymentController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             )})
     @PostMapping("/payment")
-    public ResponseEntity<PaymentResponse> createPayment(PaymentRequest paymentRequest)
-        throws Exception {
+    public ResponseEntity<PaymentResponse> createPayment(@RequestBody PaymentRequest paymentRequest) {
         return ResponseEntity.ok(paymentFacade.createPayment(paymentRequest.reservationId(),
-            paymentRequest.tokenId() ,paymentRequest.userUuid(), paymentRequest.amount()));
+            paymentRequest.userUuid(), paymentRequest.amount()));
     }
 
 }

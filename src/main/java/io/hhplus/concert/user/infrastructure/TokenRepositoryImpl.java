@@ -54,7 +54,7 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
-    public Token findByTokenUuid(UUID tokenUuid) {
-        return tokenJpaRepository.findByUuid(tokenUuid).toDomain();
+    public Optional<Token> findByTokenUuid(UUID tokenUuid) {
+        return tokenJpaRepository.findByUuid(tokenUuid).map(TokenEntity::toDomain);
     }
 }

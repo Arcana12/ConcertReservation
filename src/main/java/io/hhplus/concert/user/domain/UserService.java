@@ -1,11 +1,11 @@
-package io.hhplus.concert.user.application;
+package io.hhplus.concert.user.domain;
 
-import io.hhplus.concert.user.domain.Token;
-import io.hhplus.concert.user.domain.TokenStatus;
-import io.hhplus.concert.user.domain.User;
+import io.hhplus.concert.common.exception.CustomException;
+import io.hhplus.concert.common.exception.ErrorCode;
 import io.hhplus.concert.user.domain.repository.TokenRepository;
 import io.hhplus.concert.user.domain.repository.UserRepository;
 import io.hhplus.concert.user.infrastructure.TokenJpaRepository;
+import io.hhplus.concert.user.infrastructure.UserJpaRepository;
 import io.hhplus.concert.user.interfaces.dto.AmountResponse;
 import io.hhplus.concert.user.interfaces.dto.TokenResponse;
 import io.hhplus.concert.user.interfaces.dto.TokenStatusResponse;
@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final TokenJpaRepository tokenJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
     //토큰 생성
     @Transactional
@@ -61,8 +59,11 @@ public class UserService {
 
     //토큰 조회
     public TokenStatusResponse getTokenStatus(UUID uuid) {
-        Token token = tokenRepository.findByTokenUuid(uuid);
-        return new TokenStatusResponse(token.getTokenStatus());
+        Optional<Token> token = tokenRepository.findByTokenUuid(uuid);
+        if (token.isEmpty()) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+        return new TokenStatusResponse(token.get().getTokenStatus());
     }
 
     //대기열 토큰 만료
@@ -111,11 +112,16 @@ public class UserService {
         return new AmountResponse(user.getAmount());
     }
 
+    public void useAmount(User user, Long amount){
+        user.use(amount);
+        userRepository.save(user);
+    }
+
     //토큰 확인
-    public void checkToken(UUID uuid) throws Exception {
-        Token token = tokenRepository.findByTokenUuid(uuid);
-        if (token == null || token.isExpired()) {
-            throw new Exception("토큰이 유효하지 않습니다.");
+    public void checkToken(UUID uuid) {
+        Optional<Token> token = tokenRepository.findByTokenUuid(uuid);
+        if (token.isEmpty() || token.get().isExpired()) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }
 

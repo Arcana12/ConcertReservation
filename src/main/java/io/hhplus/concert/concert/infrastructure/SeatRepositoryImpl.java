@@ -23,7 +23,7 @@ public class SeatRepositoryImpl implements SeatRepository {
     }
 
     @Override
-    public Optional<Seat> findByIdForUpdate(Long id) {
+    public Optional<Seat> findById(Long id) {
         return seatJpaRepository.findById(id).map(SeatEntity::toDomain);
     }
 

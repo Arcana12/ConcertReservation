@@ -4,30 +4,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.hhplus.concert.concert.application.ConcertService;
-import io.hhplus.concert.concert.domain.repository.ConcertRepository;
-import io.hhplus.concert.concert.domain.repository.SeatRepository;
-import io.hhplus.concert.reservation.application.ReservationService;
+import io.hhplus.concert.reservation.domain.ReservationService;
 import io.hhplus.concert.reservation.domain.Reservation;
-import io.hhplus.concert.reservation.domain.ReservationRepository;
+import io.hhplus.concert.reservation.domain.repository.ReservationRepository;
 import io.hhplus.concert.reservation.domain.ReservationStatus;
-import io.hhplus.concert.reservation.infrastructure.ReservationJpaRepository;
-import io.hhplus.concert.reservation.infrastructure.entity.ReservationEntity;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)

@@ -1,8 +1,8 @@
-package io.hhplus.concert.reservation.application;
+package io.hhplus.concert.reservation.domain;
 
-import io.hhplus.concert.reservation.domain.Reservation;
-import io.hhplus.concert.reservation.domain.ReservationRepository;
-import io.hhplus.concert.reservation.domain.ReservationStatus;
+import io.hhplus.concert.common.exception.CustomException;
+import io.hhplus.concert.common.exception.ErrorCode;
+import io.hhplus.concert.reservation.domain.repository.ReservationRepository;
 import io.hhplus.concert.reservation.infrastructure.ReservationJpaRepository;
 import io.hhplus.concert.user.domain.User;
 import io.hhplus.concert.user.domain.repository.UserRepository;
@@ -38,13 +38,27 @@ public class ReservationService {
         Optional<Reservation> reservation = reservationRepository.findById(id);
 
         if(reservation.isEmpty()){
-            throw new IllegalArgumentException("예약 내역을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.INVALID_RESERVATION);
         }
         if(reservation.get().getStatus() != ReservationStatus.RESERVED){
-            throw new IllegalArgumentException("예약 상태를 확인해 주세요.");
+            throw new CustomException(ErrorCode.ALREADY_RESERVED);
         }
         return reservation.orElse(null);
 
+    }
+
+    public Reservation changeReservationStatus(Long id){
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+
+        if(reservation.isEmpty()){
+            throw new CustomException(ErrorCode.INVALID_RESERVATION);
+        }
+        Reservation changeReservation = reservation.get();
+        changeReservation.setStatus(ReservationStatus.SOLD);
+
+        reservationRepository.save(changeReservation);
+
+        return changeReservation;
     }
 
 }

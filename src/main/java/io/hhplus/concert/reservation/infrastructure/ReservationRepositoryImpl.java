@@ -1,7 +1,7 @@
 package io.hhplus.concert.reservation.infrastructure;
 
 import io.hhplus.concert.reservation.domain.Reservation;
-import io.hhplus.concert.reservation.domain.ReservationRepository;
+import io.hhplus.concert.reservation.domain.repository.ReservationRepository;
 import io.hhplus.concert.reservation.infrastructure.entity.ReservationEntity;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

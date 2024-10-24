@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "reservation")
 public class ReservationEntity {
 
     @Id
@@ -46,8 +48,8 @@ public class ReservationEntity {
     }
 
     public static ReservationEntity fromDomain(Reservation reservation){
-        return new ReservationEntity(reservation.getConcertId(),reservation.getSeatId(),
-            reservation.getConcertId(), reservation.getStatus());
+        return new ReservationEntity(reservation.getId(), reservation.getConcertId(),reservation.getSeatId(),
+            reservation.getConcertId(), reservation.getStatus(), reservation.getCreatedAt(), reservation.getUpdatedAt());
     }
 
     public Reservation toDomain(){

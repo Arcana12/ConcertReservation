@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public record PaymentRequest(
     Long reservationId,
-    UUID tokenId,
+    UUID tokenUuid,
     UUID userUuid,
     Long amount
 ) {

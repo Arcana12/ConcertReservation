@@ -4,11 +4,7 @@ import io.hhplus.concert.user.domain.Token;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface TokenRepository {
 
     Optional<Token> findByUserId(Long id);
@@ -21,5 +17,5 @@ public interface TokenRepository {
 
     List<Token> findPendingStatusTokens();
 
-    Token findByTokenUuid(UUID tokenUuid);
+    Optional<Token> findByTokenUuid(UUID tokenUuid);
 }

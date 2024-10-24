@@ -1,6 +1,6 @@
 package io.hhplus.concert.concert.interfaces;
 
-import io.hhplus.concert.concert.application.ConcertService;
+import io.hhplus.concert.concert.domain.ConcertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

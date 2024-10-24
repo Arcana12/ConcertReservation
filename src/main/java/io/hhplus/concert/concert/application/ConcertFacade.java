@@ -20,7 +20,7 @@ public class ConcertFacade {
     private final SeatService seatService;
 
     //예약 가능한 날짜 조회
-    public ConcertDateResponse getConcertDate(UUID uuid, String concertName) throws Exception {
+    public ConcertDateResponse getConcertDate(String concertName) {
 
         return new ConcertDateResponse(concertService.getConcertDate(concertName).stream()
             .map(Concert::getConcertAt)
@@ -28,7 +28,7 @@ public class ConcertFacade {
     }
 
     //예약 가능한 좌석 조회
-    public ConcertSeatResponse getSeat(UUID uuid, LocalDateTime date) throws Exception {
+    public ConcertSeatResponse getSeat(LocalDateTime date) {
 
         return new ConcertSeatResponse(seatService.getSeat(date));
     }
