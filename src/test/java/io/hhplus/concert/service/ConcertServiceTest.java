@@ -5,13 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
-import io.hhplus.concert.concert.application.ConcertService;
+import io.hhplus.concert.concert.domain.ConcertService;
+import io.hhplus.concert.concert.domain.SeatService;
 import io.hhplus.concert.concert.domain.Concert;
 import io.hhplus.concert.concert.domain.Seat;
 import io.hhplus.concert.concert.domain.SeatStatus;
 import io.hhplus.concert.concert.domain.repository.ConcertRepository;
 import io.hhplus.concert.concert.domain.repository.SeatRepository;
-import io.hhplus.concert.user.application.UserService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +32,9 @@ public class ConcertServiceTest {
 
     @InjectMocks
     private ConcertService concertService;
+
+    @InjectMocks
+    private SeatService seatService;
 
     @BeforeEach
     public void setup() {
@@ -58,7 +61,7 @@ public class ConcertServiceTest {
         doReturn(seatList).when(seatRepository).findByConcertIdAndStatus(concert.getId(), SeatStatus.AVAILABLE);
 
         // When
-        List<Seat> allSeats = concertService.getSeat(dateTime);
+        List<Seat> allSeats = seatService.getSeat(dateTime);
 
         // Then
         verify(concertRepository).findByConcertAt(dateTime);
@@ -78,13 +81,13 @@ public class ConcertServiceTest {
         seat.setId(id);
         seat.setStatus(SeatStatus.AVAILABLE);
 
-        doReturn(Optional.of(seat)).when(seatRepository).findByIdForUpdate(id);
+        doReturn(Optional.of(seat)).when(seatRepository).findById(id);
 
         // When
-        concertService.checkAndChangeSeatStatus(id);
+        seatService.checkAndChangeSeatStatus(id);
 
         // Then
-        verify(seatRepository).findByIdForUpdate(id);
+        verify(seatRepository).findById(id);
         assertEquals(SeatStatus.RESERVED, seat.getStatus());
         verify(seatRepository).save(seat);
     }
@@ -99,10 +102,10 @@ public class ConcertServiceTest {
         seat.setId(id);
         seat.setStatus(SeatStatus.RESERVED);
 
-        doReturn(Optional.of(seat)).when(seatRepository).findByIdForUpdate(id);
+        doReturn(Optional.of(seat)).when(seatRepository).findById(id);
 
         // When & Then
-        Exception exception = assertThrows(RuntimeException.class, () -> concertService.checkAndChangeSeatStatus(id));
+        Exception exception = assertThrows(RuntimeException.class, () -> seatService.checkAndChangeSeatStatus(id));
         assertEquals("해당 좌석은 예약할 수 없습니다.", exception.getMessage());
     }
 

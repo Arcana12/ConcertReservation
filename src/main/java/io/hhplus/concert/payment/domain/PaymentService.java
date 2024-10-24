@@ -1,11 +1,7 @@
-package io.hhplus.concert.payment.application;
+package io.hhplus.concert.payment.domain;
 
-import io.hhplus.concert.payment.domain.Payment;
-import io.hhplus.concert.payment.domain.PaymentHist;
-import io.hhplus.concert.payment.domain.PaymentStatus;
 import io.hhplus.concert.payment.domain.repository.PaymentHistRepository;
 import io.hhplus.concert.payment.domain.repository.PaymentRepository;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

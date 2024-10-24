@@ -4,7 +4,6 @@ import java.util.UUID;
 
 public record AmountRequest
     (
-        UUID userUuid,
-        Long amount
+        UUID userUuid
     ){
 }

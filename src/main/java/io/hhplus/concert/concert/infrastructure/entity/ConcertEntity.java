@@ -4,6 +4,7 @@ import io.hhplus.concert.concert.domain.Concert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "concert")
 public class ConcertEntity {
 
     @Id

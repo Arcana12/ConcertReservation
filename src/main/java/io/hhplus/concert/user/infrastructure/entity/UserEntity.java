@@ -1,10 +1,13 @@
 package io.hhplus.concert.user.infrastructure.entity;
 
+import io.hhplus.concert.common.exception.CustomException;
+import io.hhplus.concert.common.exception.ErrorCode;
 import io.hhplus.concert.user.domain.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,6 +23,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @AllArgsConstructor
 @NoArgsConstructor
 @EnableJpaAuditing
+@Table(name = "users")
 public class UserEntity {
 
     @Id
@@ -53,7 +57,7 @@ public class UserEntity {
 
     private void validateId(Long id){
         if (id == null) {
-            throw new IllegalArgumentException("유저가 존재하지 않습니다.");
+            throw new CustomException(ErrorCode.INVALID_USER);
         }
     }
 

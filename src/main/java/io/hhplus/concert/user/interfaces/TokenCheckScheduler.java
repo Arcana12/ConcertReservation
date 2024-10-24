@@ -1,6 +1,6 @@
 package io.hhplus.concert.user.interfaces;
 
-import io.hhplus.concert.user.application.UserService;
+import io.hhplus.concert.user.domain.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

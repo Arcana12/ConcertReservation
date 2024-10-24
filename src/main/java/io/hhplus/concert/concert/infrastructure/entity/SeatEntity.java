@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "seat")
 public class SeatEntity {
 
     @Id
@@ -36,17 +38,9 @@ public class SeatEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public SeatEntity(Long id, Long concertId, Long seatNum, SeatStatus status, Long price) {
-        this.id = id;
-        this.concertId = concertId;
-        this.seatNum = seatNum;
-        this.status = status;
-        this.price = price;
-    }
-
     public static SeatEntity fromDomain(Seat seat) {
         return new SeatEntity(seat.getId(), seat.getConcertId(),seat.getSeatNum(),
-            seat.getStatus(), seat.getPrice());
+            seat.getStatus(), seat.getPrice(), seat.getCreatedAt(), seat.getUpdatedAt());
     }
 
     public Seat toDomain(){
