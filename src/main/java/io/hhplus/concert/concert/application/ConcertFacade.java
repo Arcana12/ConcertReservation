@@ -5,9 +5,7 @@ import io.hhplus.concert.concert.domain.ConcertService;
 import io.hhplus.concert.concert.domain.SeatService;
 import io.hhplus.concert.concert.interfaces.dto.ConcertDateResponse;
 import io.hhplus.concert.concert.interfaces.dto.ConcertSeatResponse;
-import io.hhplus.concert.user.domain.UserService;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

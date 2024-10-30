@@ -1,12 +1,9 @@
 package io.hhplus.concert.reservation.application;
 
-import io.hhplus.concert.concert.domain.ConcertService;
-import io.hhplus.concert.concert.domain.SeatService;
 import io.hhplus.concert.concert.domain.SeatStatusChangeEvent;
 import io.hhplus.concert.reservation.domain.Reservation;
 import io.hhplus.concert.reservation.domain.ReservationService;
 import io.hhplus.concert.reservation.interfaces.dto.ReservationResponse;
-import io.hhplus.concert.user.domain.UserService;
 import jakarta.transaction.Transactional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

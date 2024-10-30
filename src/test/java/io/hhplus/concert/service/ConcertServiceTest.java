@@ -32,9 +32,6 @@ public class ConcertServiceTest {
     private SeatRepository seatRepository;
 
     @InjectMocks
-    private ConcertService concertService;
-
-    @InjectMocks
     private SeatService seatService;
 
     @BeforeEach
