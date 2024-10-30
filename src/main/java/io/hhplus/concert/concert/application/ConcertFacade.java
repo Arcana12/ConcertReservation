@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ConcertFacade {
 
-    private final UserService userService;
     private final ConcertService concertService;
     private final SeatService seatService;
 

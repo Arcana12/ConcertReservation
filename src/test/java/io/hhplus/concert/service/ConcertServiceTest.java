@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
+import io.hhplus.concert.common.exception.CustomException;
 import io.hhplus.concert.concert.domain.ConcertService;
 import io.hhplus.concert.concert.domain.SeatService;
 import io.hhplus.concert.concert.domain.Concert;
@@ -105,8 +106,8 @@ public class ConcertServiceTest {
         doReturn(Optional.of(seat)).when(seatRepository).findById(id);
 
         // When & Then
-        Exception exception = assertThrows(RuntimeException.class, () -> seatService.checkAndChangeSeatStatus(id));
-        assertEquals("해당 좌석은 예약할 수 없습니다.", exception.getMessage());
+        CustomException exception = assertThrows(CustomException.class, () -> seatService.checkAndChangeSeatStatus(id));
+        assertEquals("예약되었거나 예약 진행중인 좌석입니다.", exception.getErrorCode().getMessage());
     }
 
 }
