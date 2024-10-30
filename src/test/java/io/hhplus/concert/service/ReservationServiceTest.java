@@ -2,14 +2,12 @@ package io.hhplus.concert.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.hhplus.concert.common.exception.CustomException;
 import io.hhplus.concert.reservation.domain.ReservationService;
 import io.hhplus.concert.reservation.domain.Reservation;
 import io.hhplus.concert.reservation.domain.repository.ReservationRepository;
@@ -61,10 +59,10 @@ public class ReservationServiceTest {
         when(reservationRepository.findById(reservationId)).thenReturn(Optional.empty());
 
         // When & Then
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        CustomException exception = assertThrows(CustomException.class, () ->
             reservationService.checkReservation(reservationId)
         );
-        assertEquals("예약 내역을 찾을 수 없습니다.", exception.getMessage());
+        assertEquals("잘못된 예약 번호입니다.", exception.getErrorCode().getMessage());
         verify(reservationRepository, times(1)).findById(reservationId);
     }
 
@@ -80,10 +78,10 @@ public class ReservationServiceTest {
         when(reservationRepository.findById(reservationId)).thenReturn(Optional.of(reservation));
 
         // When & Then
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        CustomException exception = assertThrows(CustomException.class, () ->
             reservationService.checkReservation(reservationId)
         );
-        assertEquals("예약 상태를 확인해 주세요.", exception.getMessage());
+        assertEquals("예약되었거나 예약 진행중인 좌석입니다.", exception.getErrorCode().getMessage());
         verify(reservationRepository, times(1)).findById(reservationId);
     }
 

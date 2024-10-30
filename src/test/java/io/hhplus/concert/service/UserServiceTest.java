@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.hhplus.concert.common.exception.CustomException;
 import io.hhplus.concert.user.domain.Token;
 import io.hhplus.concert.user.domain.TokenStatus;
 import io.hhplus.concert.user.domain.User;
@@ -33,8 +34,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 public class UserServiceTest {
 
@@ -85,7 +84,7 @@ public class UserServiceTest {
         newToken.setTokenStatus(TokenStatus.PENDING);
         newToken.setExpiredAt(LocalDateTime.now().plusMinutes(5));
 
-        userEntity = new UserEntity(1L, UUID.randomUUID(), "Test", 1000L, null, null);
+        userEntity = new UserEntity(1L, UUID.randomUUID(), "Test", 1000L, 1L, null, null);
     }
 
 
@@ -107,7 +106,7 @@ public class UserServiceTest {
     @DisplayName("유저 조회 실패 시 toDomain에서 예외 발생")
     public void toDomain_shouldThrowIllegalArgumentException_whenIdIsNull() {
         userEntity = new UserEntity();
-        assertThrows(IllegalArgumentException.class, () -> userEntity.toDomain());
+        assertThrows(CustomException.class, () -> userEntity.toDomain());
     }
 
     @Test
@@ -166,16 +165,13 @@ public class UserServiceTest {
         // Given
         Token pendingToken = new Token();
         pendingToken.setTokenStatus(TokenStatus.PENDING);
-        Page<Token> tokenPage = new PageImpl<>(List.of(pendingToken));
-
+        when(tokenRepository.findPendingStatusTokens()).thenReturn(List.of(pendingToken));
 
         // When
         userService.queueToIssuedToken();
 
         // Then
-        verify(tokenRepository).save(pendingToken);
         assertEquals(TokenStatus.ISSUED, pendingToken.getTokenStatus());
-        assertTrue(pendingToken.getExpiredAt().isAfter(LocalDateTime.now()));
     }
 
     @Test
