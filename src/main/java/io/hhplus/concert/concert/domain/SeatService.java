@@ -42,8 +42,6 @@ public class SeatService {
         if(seat.getStatus() != SeatStatus.AVAILABLE){
             throw new CustomException(ErrorCode.ALREADY_RESERVED);
         }
-
-        log.info("seat : {}", seat.getUpdatedAt());
         seat.setStatus(SeatStatus.RESERVED);
         seat.setUpdatedAt(LocalDateTime.now());
         seatRepository.save(seat);

@@ -19,6 +19,7 @@ public class User {
     private UUID uuid;
     private String name;
     private Long amount;
+    private Long version;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

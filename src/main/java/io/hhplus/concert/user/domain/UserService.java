@@ -15,9 +15,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
@@ -112,9 +115,27 @@ public class UserService {
         return new AmountResponse(user.getAmount());
     }
 
+    //잔액 사용
     public void useAmount(User user, Long amount) {
-        user.use(amount);
-        userRepository.save(user);
+        int retryCount = 0;
+        int maxRetries = 5;
+
+        while (retryCount < maxRetries) {
+            try {
+                user.use(amount);
+                userRepository.save(user);
+                break;
+            } catch (OptimisticLockingFailureException e) {
+                retryCount++;
+                log.info("useAmount retryCount : {}", retryCount);
+                if (retryCount >= maxRetries) {
+                    throw e;  // 재시도 한계를 초과한 경우 예외를 던짐
+                }
+
+                // 사용자의 정보를 새로 받아옴
+                user = userRepository.findById(user.getUuid());
+            }
+        }
     }
 
     //토큰 확인

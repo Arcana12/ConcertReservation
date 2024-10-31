@@ -4,6 +4,7 @@ import io.hhplus.concert.common.exception.CustomException;
 import io.hhplus.concert.common.exception.ErrorCode;
 import io.hhplus.concert.user.domain.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @Entity
@@ -23,6 +25,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @AllArgsConstructor
 @NoArgsConstructor
 @EnableJpaAuditing
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "users")
 public class UserEntity {
 
@@ -34,6 +37,9 @@ public class UserEntity {
     private String name;
     private Long amount;
 
+    @Version
+    private Long version;
+
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate
@@ -41,18 +47,12 @@ public class UserEntity {
 
     public User toDomain() {
         validateId(id);
-        return new User(id, uuid, name, amount, createdAt, updatedAt);
-    }
-
-    public UserEntity(Long id, UUID uuid, String name, Long amount) {
-        this.id = id;
-        this.uuid = uuid;
-        this.name = name;
-        this.amount = amount;
+        return new User(id, uuid, name, amount, version, createdAt, updatedAt);
     }
 
     public static UserEntity fromDomain(User user) {
-        return new UserEntity(user.getId(), user.getUuid(), user.getName(), user.getAmount());
+        return new UserEntity(user.getId(), user.getUuid(), user.getName(), user.getAmount(),
+            user.getVersion(), user.getCreatedAt(), user.getUpdatedAt());
     }
 
     private void validateId(Long id){
