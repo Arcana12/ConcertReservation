@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Lock;
 public interface SeatJpaRepository extends JpaRepository<SeatEntity, Long> {
     List<SeatEntity> findByConcertIdAndStatus(Long concertId, SeatStatus status);
 
+    //비관적 락 적용
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<SeatEntity> findById(Long id);
 
