@@ -8,6 +8,7 @@ import io.hhplus.concert.payment.domain.PaymentStatus;
 import io.hhplus.concert.payment.interfaces.dto.PaymentResponse;
 import io.hhplus.concert.reservation.domain.ReservationService;
 import io.hhplus.concert.reservation.domain.Reservation;
+import io.hhplus.concert.user.domain.RedisQueueService;
 import io.hhplus.concert.user.domain.UserService;
 import io.hhplus.concert.user.domain.User;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,7 @@ public class PaymentFacade {
     private final UserService userService;
     private final ReservationService reservationService;
     private final SeatService seatService;
+    private final RedisQueueService redisQueueService;
 
 
     //결제
@@ -50,8 +52,8 @@ public class PaymentFacade {
         //예약 상태 변경
         reservationService.changeReservationStatus(reservationId);
 
-        //대기열 토큰 만료
-        userService.dropToken(user.getId());
+        //만료
+        redisQueueService.removeQueue(user.getId());
 
         return new PaymentResponse(PaymentStatus.SUCCESS);
     }
