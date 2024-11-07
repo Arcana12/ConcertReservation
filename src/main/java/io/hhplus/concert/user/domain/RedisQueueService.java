@@ -44,7 +44,7 @@ public class RedisQueueService {
         return new QueueResponse(zSetOps.rank("waitQueue", user.getId().toString()));
     }
 
-    // 대기열 상태 변경
+    // 토큰 발급
     public void dequeueWithExpiry() {
         // ZRANGE 명령을 통해 0에서 19 인덱스까지 조회
         Set<String> queueData = stringRedisTemplate.opsForZSet().range("waitQueue", 0, 19);
