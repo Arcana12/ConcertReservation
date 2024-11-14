@@ -37,7 +37,7 @@ public class ReservationController {
             )})
     @PostMapping("/reservation")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        return ResponseEntity.ok(reservationFacade.createReservation(reservationRequest.tokenUuid(), reservationRequest.userUuid(),
+        return ResponseEntity.ok(reservationFacade.createReservation(reservationRequest.tokenUuid(),
             reservationRequest.concertId(), reservationRequest.seatId()));
     }
 }
