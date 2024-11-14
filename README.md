@@ -261,3 +261,52 @@ Caching Strategy를 선택할때 다음과 같은 요소를 고민해 봐야 합
 현재 서비스에서는 토큰 관리를 위해서만 사용하고 있고, 사용자별로 토큰의 만료시간을 설정하기 위해 String 타입을 사용하였습니다.
 
 </details>
+
+<details>
+<summary>이벤트 기반 트랜잭션 처리 전략</summary>
+
+### 기존 로직의 문제점 <hr>
+```java
+@Transactional
+public void 결제(){
+  예약 확인();
+  결제 처리();
+  잔액 사용();
+  좌석 상태 변경();
+  예약 상태 변경();
+  결제 내역 저장();
+}
+```
+현재 결제 로직이 위와 같이 되어있는데, 결제 처리가 되어도 상태 변경, 결제 내역 저장에 실패해도 하나의 트랜잭션으로 묶여있기 때문에 롤백이 된다는 문제점이 있습니다.
+</br>
+이처럼 주요 로직이 처리되고 나서 다른 도메인의 결과로 인해 롤백이 되는 문제를 해결하기 위해, 도메인간의 책임을 분리하도록 이벤트 기반 로직 처리가 필요하다고 생각합니다.
+</br></br>
+앞으로 서비스 규모의 확정성을 생각했을 때, 모듈간의 결합도를 낮추기 위해 결제와 관련된 로직을 하나의 트랜잭션으로 묶고 상태 변경이나 결제 내역을 저장하는 로직을 이벤트로 처리하는것이 더 나은 방향이라고 생각했습니다.
+</br></br>
+간단하게 코드를 작성해 보자면 다음과 같이 수정할 수 있습니다.
+### 수정된 로직 <hr>
+```java
+@Transactional
+public void 결제(){
+  예약 확인();
+  결제 처리();
+  잔액 사용();
+  eventPublisher.publishEvent(좌석 상태 변경 이벤트());
+  eventPublisher.publishEvent(예약 상태 변경 이벤트());
+  eventPublisher.publishEvent(결제 내역 저장 이벤트());
+}
+
+@Component
+@RequiredArgsConstructor
+public class 결제 내역 저장 이벤트 {
+
+  @Async
+  @EventListener
+  public void 결제 내역 저장(결제 내역 저장 이벤트()) {
+    paymentService.결제내역저장(결제정보, 유저ID);
+  }
+}
+```
+
+
+</details>
